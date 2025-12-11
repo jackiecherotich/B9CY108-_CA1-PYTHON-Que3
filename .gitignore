@@ -1,0 +1,84 @@
+# -------------------------
+# Python Cache / Build
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyd
+*.pdb
+*.pkl
+*.egg-info/
+*.egg
+build/
+dist/
+
+# -------------------------
+# Virtual Environment Folders
+# -------------------------
+env/
+venv/
+ENV/
+.venv/
+.python-version
+
+# -------------------------
+# Editor / IDE Files
+# -------------------------
+.vscode/
+.idea/
+*.code-workspace
+
+# -------------------------
+# OS-generated files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Logs / Temp
+# -------------------------
+*.log
+*.tmp
+
+# -------------------------
+# SQLite / Database Files
+# (for Que3 - Python server)
+# -------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# -------------------------
+# Credentials / Environment Variables
+# -------------------------
+.env
+*.env
+secrets.json
+
+# -------------------------
+# Jupyter Notebook (if used)
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# CSV / Output Files (Optional)
+# If you want CSV files included in submission,
+# remove "csv" below.
+# -------------------------
+# *.csv
+
+# -------------------------
+# Python compiled libraries
+# -------------------------
+*.so
+*.dll
+
+# -------------------------
+# Backup files
+# -------------------------
+*.bak
+*.old
+*.swp
+*.swo
+
