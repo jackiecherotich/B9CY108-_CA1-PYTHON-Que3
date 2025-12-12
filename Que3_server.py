@@ -11,7 +11,7 @@ load_dotenv()
 print("DB_HOST =", os.getenv("DB_HOST"))
 
 #--------------------------------------------------------------#
-#------------------DATABASE CONNECTION-MYSQL-------------------#
+#------------------Connecting to MySQL DB------------------#
 def db_connection():
 
     try:
@@ -34,7 +34,7 @@ def db_connection():
         exit()
 
 # -------------------------------------------------------------------#
-#---------------------CREATING TABLES---------------------------------#
+#---------------------Crating tables on MySQL DB--------------------#
 def create_tables(cnx):
     try:
         cursor = cnx.cursor()
@@ -51,7 +51,7 @@ def create_tables(cnx):
         cnx.rollback()
 
 #--------------------------------------------------------------------------#
-#----------------------------UNIQUE NUMBER---------------------------------#
+#----------------------------Application unique number----------------------#
 #check the ids existing in the system and add 1 to get new ID for new registration
 def get_next_student_number(cnx):
     cursor = cnx.cursor()
@@ -111,14 +111,14 @@ def save_details(connection, data):
         connection.rollback()
 
 #--------------------------------------------------------------------#
-#----------------HANDLING CLIENT REQUEST-----------------------------#
+#----------------Client request-----------------------------#
 # Registration Server has to listen for requests from clients
 # used TCP and Multithreading
 SERVER = "127.0.0.1"    #socket.gethostbyname(socket.gethostname()) # IP of the server
 PORT = 5050
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((SERVER, PORT))
@@ -150,7 +150,7 @@ def handle_client(conn, addr):
         conn.close()
 
 #------------------------------------------------------------------------#
-#----------------------SERVER STARTING FUNCTION-----------------------------------#
+#----------------------Server starting-----------------------------------#
 #Server to listen for connections from clients
 def server_start():
     connection = db_connection()
@@ -170,7 +170,7 @@ def server_start():
 
 
 #-----------------------------------------------------------------------#
-#----------------MAIN FUNCTION------------------------------------------#
+#----------------Main------------------------------------------#
 if __name__ == "__main__":
     server_start()
 
