@@ -9,9 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
-# connecting to the DB
-# database details saved in .env
+#--------------------------------------------------------------#
+#------------------DATABASE CONNECTION-MYSQL-------------------#
 def db_connection():
 
     try:
@@ -33,7 +32,8 @@ def db_connection():
         print("Unexpected error:", e)
         exit()
 
-# to create tables in the DB
+# -------------------------------------------------------------------#
+#---------------------CREATING TABLES---------------------------------#
 def create_tables(cnx):
     try:
         cursor = cnx.cursor()
@@ -49,6 +49,8 @@ def create_tables(cnx):
         print("Failed connecting to database: ", error)
         cnx.rollback()
 
+#--------------------------------------------------------------------------#
+#----------------------------UNIQUE NUMBER---------------------------------#
 #check the ids existing in the system and add 1 to get new ID for new registration
 def get_next_student_number(cnx):
     cursor = cnx.cursor()
@@ -71,10 +73,10 @@ def generate_unique_number(cnx,course,start_year):
 
     prefix = COURSE_CODES.get(course, "MSC-GEN")
     next_id = get_next_student_number(cnx)
-
+# Unique Application number to the applicant
     return f"{prefix}-{next_id}-{start_year}"
 
-
+# to Save the details to the Database
 def save_details(connection, data):
     try:
         cursor = connection.cursor()
@@ -107,16 +109,22 @@ def save_details(connection, data):
         print(" Error saving the details:", error)
         connection.rollback()
 
-
+#--------------------------------------------------------------------#
+#----------------HANDLING CLIENT REQUEST-----------------------------#
 # Registration Server has to listen for requests from clients
-# used TCP
-SERVER = socket.gethostbyname(socket.gethostname()) # IP of the server
+# used TCP and Multithreading
+SERVER = "127.0.0.1"    #socket.gethostbyname(socket.gethostname()) # IP of the server
 PORT = 5050
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((SERVER, PORT))
 
-def handle_client(conn, addr,connection):
+# To handle connections from various clients
+def handle_client(conn, addr):
+    connection = db_connection()
     try:
         print(f"New client connected and was initiated by {addr}")
         time.sleep(0.1)
@@ -134,23 +142,25 @@ def handle_client(conn, addr,connection):
         else:
             conn.send(f"Error saving details.".encode())
 
-
-
     except Exception as e:
         print(" Error connecting to server: ")
     finally:
+        connection.close()
         conn.close()
 
-
+#------------------------------------------------------------------------#
+#----------------------SERVER STARTING FUNCTION-----------------------------------#
+#Server to listen for connections from clients
 def server_start():
     connection = db_connection()
     create_tables(connection)
+    connection.close()
     try:
        server.listen()
        print("Waiting for clients...\n")
        while True:
            conn, addr = server.accept()
-           thread = threading.Thread(target=handle_client, args=(conn, addr, connection)) # server get multiple requests
+           thread = threading.Thread(target=handle_client, args=(conn, addr) )# server get multiple requests
            thread.start()
            print(f"Client connected are: ({threading.active_count()} - 1)")
 
@@ -158,10 +168,8 @@ def server_start():
        print("\nCheck the server")
 
 
-
-
-
-
+#-----------------------------------------------------------------------#
+#----------------MAIN FUNCTION------------------------------------------#
 if __name__ == "__main__":
     server_start()
 
